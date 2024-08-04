@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		46E563C52C59AB9400A82DED /* last-breath Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 46E563C42C59AB9400A82DED /* last-breath Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		46F526DD2C5FD82900072B3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46F526DC2C5FD82900072B3E /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +37,6 @@
 /* Begin PBXFileReference section */
 		46E563BE2C59AB9400A82DED /* last-breath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "last-breath.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		46E563C42C59AB9400A82DED /* last-breath Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "last-breath Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		46F526DC2C5FD82900072B3E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -59,7 +57,6 @@
 		46E563B72C59AB9300A82DED = {
 			isa = PBXGroup;
 			children = (
-				46F526DC2C5FD82900072B3E /* Assets.xcassets */,
 				46E563C82C59AB9400A82DED /* last-breath Watch App */,
 				46E563BF2C59AB9400A82DED /* Products */,
 			);
@@ -167,7 +164,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				46F526DD2C5FD82900072B3E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
