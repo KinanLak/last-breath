@@ -65,17 +65,22 @@ struct RecordView: View {
     }
     
     private var recordingView: some View {
-        VStack(spacing: 0) {
-            if isRecording {
+        
+            
+            VStack(spacing: 0) {
+                
                 timerDisplay
                 heartRateDisplay
                 RecordButton
                 BPMStatsView
-            } else {
-                heartRateDisplay
-                RecordButton
             }
-        }
+            
+        
+    }
+    
+    private func clearCurrentSessions() {
+        currentBPMList = []
+        isOver = false
     }
     
     private var RecordButton : some View {
@@ -86,23 +91,25 @@ struct RecordView: View {
         var action = {}
         
         if isRecording {
-            text = "Start"
+            text = "Stop"
             color = .red
-            icon = "play.fill"
+            icon = "stop.fill"
             action = {stopRecording()}
             
         } else {
             if isOver {
                 text = "Restart"
                 icon = "arrow.clockwise"
+                color = .blue
             } else {
                 text = "Start"
-                icon = "stop.fill"
+                icon = "play.fill"
+                color = .green
             }
-            color = .green
+            
             action = {startRecording()}
         }
-
+        
         if #available(watchOS 11.0, *) {
             return Button(text, systemImage: icon, action: action)
                 .bold()
