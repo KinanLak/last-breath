@@ -6,9 +6,11 @@ import WatchKit
 struct RecordView: View {
     @State private var isRecording = false
     @State private var isOver = false
+    @State private var displayTime = false
     
     @State private var elapsedTime: TimeInterval = 0
     @State private var heartRate: Double = 0
+    @State private var animationAmount: CGFloat = 1
     
     @State private var timer: AnyCancellable?
     @State private var workoutSession: HKWorkoutSession?
@@ -65,22 +67,20 @@ struct RecordView: View {
     }
     
     private var recordingView: some View {
-        
-            
-            VStack(spacing: 0) {
-                
+        VStack(spacing: 0) {
+            if displayTime {
                 timerDisplay
-                heartRateDisplay
-                RecordButton
-                BPMStatsView
             }
-            
-        
+            heartRateDisplay
+            RecordButton
+            BPMStatsView
+        }
     }
     
     private func clearCurrentSessions() {
         currentBPMList = []
         isOver = false
+        displayTime = false
     }
     
     private var RecordButton : some View {
@@ -98,16 +98,18 @@ struct RecordView: View {
             
         } else {
             if isOver {
-                text = "Restart"
-                icon = "arrow.clockwise"
-                color = .blue
+                text = "Clear"
+                icon = "trash.fill"
+                color = .orange
+                action = {clearCurrentSessions()}
             } else {
                 text = "Start"
                 icon = "play.fill"
                 color = .green
+                action = {startRecording()}
             }
             
-            action = {startRecording()}
+            
         }
         
         if #available(watchOS 11.0, *) {
@@ -177,6 +179,8 @@ struct RecordView: View {
                 Text(String(elapsed.seconds))
                     .font(.system(size: 60, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
+                    .id("seconds")
+                    .contentTransition(.numericText())
                 Text("sec")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.gray)
@@ -185,6 +189,8 @@ struct RecordView: View {
                 Text(String(elapsed.minutes))
                     .font(.system(size: 60, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
+                    .id("minutes")
+                    .contentTransition(.numericText())
                 Text("mn")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.gray)
@@ -192,6 +198,8 @@ struct RecordView: View {
                 Text(String(format: "%02d", elapsed.seconds))
                     .font(.system(size: 60, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
+                    .id("seconds")
+                    .contentTransition(.numericText())
                 Text("s")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.gray)
@@ -211,10 +219,22 @@ struct RecordView: View {
                 Text(String(Int(heartRate)))
                     .foregroundColor(.red)
                     .font(.system(size: 50, weight: .bold, design: .rounded))
+                    .id("heartRate")
+                    .contentTransition(.numericText())
             }
+
             Image(systemName: "heart.fill")
                 .foregroundColor(.red)
                 .font(.system(size: 40))
+                .scaleEffect(animationAmount)
+                .animation(
+                    .spring(response: 0.4, dampingFraction: 0.5, blendDuration: 0.5)
+                    .repeatForever(autoreverses: true),
+                    value: animationAmount
+                )
+                .onAppear {
+                    animationAmount = 1.2
+                }
             
         }.padding(.bottom, 5)
     }
@@ -241,6 +261,7 @@ struct RecordView: View {
     
     private func startRecording() {
         
+        displayTime = true
         
         if isOver == true {
             //timer?.cancel()
@@ -254,10 +275,12 @@ struct RecordView: View {
         currentBPMList = []  // Clear the BPM list for the new session
         
         let startTime = Date()
-        timer = Timer.publish(every: 0.1, on: .main, in: .common)
+        timer = Timer.publish(every: 0.5, on: .main, in: .common)
             .autoconnect()
             .sink { _ in
-                self.elapsedTime = Date().timeIntervalSince(startTime)
+                withAnimation(.linear(duration: 0.1)) {
+                    self.elapsedTime = Date().timeIntervalSince(startTime)
+                }
                 self.hapticTimer()
             }
         
